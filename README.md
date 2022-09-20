@@ -12,7 +12,7 @@ Comienza creando un par de componentes de prueba. Apóyate del CLI de Angular de
 - `ng g c components/about`
 - `ng g c components/catalogo`
 
-2. **Creando el routing**
+### 2. **Creando el routing**
 Al utilizar el comando `ng new <project-name>` Angular nos pregunta lo siguiente:
 
 ```sh
