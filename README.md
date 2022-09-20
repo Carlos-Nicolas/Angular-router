@@ -6,13 +6,13 @@ Todas las aplicaciones front-end van a necesitar de **múltiples páginas**, las
 
 Puedes enlazar componentes a las rutas para cuando ingreses a X ruta, se muestre Y componente.
 
-1. **Creando componentes**
+#### 1. **Creando componentes**
 Comienza creando un par de componentes de prueba. Apóyate del CLI de Angular de la siguiente manera:
 
 - `ng g c components/about`
 - `ng g c components/catalogo`
 
-### 2. **Creando el routing**
+#### 2. **Creando el routing**
 Al utilizar el comando `ng new <project-name>` Angular nos pregunta lo siguiente:
 
 ```sh
@@ -49,7 +49,7 @@ import { AppRoutingModule } from './app-routing.module';
 })
 export class AppModule { }
 ```
-3. **Imports de componentes en el routing**
+#### 3. **Imports de componentes en el routing**
 A continuación, importa en este nuevo archivo los componentes, y crea una regla para crear una ruta para cada uno de ellos de la siguiente manera:
 
 ```js
@@ -75,7 +75,7 @@ const routes: Routes = [
 export class AppRoutingModule { }
 ```
 
-4. **Directiva para el renderizado de páginas**
+#### 4. **Directiva para el renderizado de páginas**
 Finalmente, tienes que importar la directiva `<router-outlet>` en el componente raíz de tu aplicación.
 
 
