@@ -87,3 +87,42 @@ Finalmente, tienes que importar la directiva `<router-outlet>` en el componente 
 Angular utiliza esta directiva para renderizar el componente de la ruta actual donde el usuario se encuentre.
 
 Ingresa a `localhost:4200/catalogo` o `localhost:4200/about`, para observar cada componente.
+
+
+# **Creando el Home**
+
+Crear rutas y relacionarlas con componentes en Angular es una tarea trivial. Anímate a construir tu primera aplicación con rutas, crea una página de inicio y otra página para listar productos o hablar de ti.
+
+## **Cómo optimizar rutas en Angular**
+
+Veamos algunos consejos para optimizar tus rutas.
+Ocurrirá en tu aplicación que el usuario no ingrese ninguna ruta. Siempre es buena práctica tener otra por defecto y puedes realizarlo de la siguiente manera:
+
+```js
+// app-routing.module.ts
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'catalogo',
+    component: CatalogoComponent
+  },
+  {
+    path: 'home',
+    component: HomeComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+Observa la primera regla que tiene el `path` vacío y un `redirectTo` para redireccionar al componente “home” cuando no se ingresa ninguna ruta. Utiliza también la opción `pathMatch` para asegurar que la ruta sea exacta.
+
+
