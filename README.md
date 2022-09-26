@@ -125,4 +125,89 @@ export class AppRoutingModule { }
 
 Observa la primera regla que tiene el `path` vacío y un `redirectTo` para redireccionar al componente “home” cuando no se ingresa ninguna ruta. Utiliza también la opción `pathMatch` para asegurar que la ruta sea exacta.
 
+# **Página de categorías**
 
+Cuando construyes URLs en tu aplicación, éstas **pueden poseer parámetros dinámicos**, por lo general, IDs para identificar registros, para capturarlos y manipularlos posteriormente.
+
+
+## **Capturando parámetros de URL**
+Veamos a continuación dos maneras de capturar estos parámetros, una síncrona y otra asíncrona.
+
+## **Captura de parámetros síncronos**
+
+El mejor lugar para capturar parámetros de URL, sean síncronos o no, es utilizando los hooks de ciclo de vida de Angular, más concretamente `ngOnInit()`.
+
+#### 1. **Creando rutas**
+Comienza creando tus rutas que permitan ingresar parámetros dinámicos de la siguiente manera:
+
+```js
+// app-routing.module.ts
+const routes: Routes = [
+  {
+    path: 'catalogo',
+    component: CatalogoComponent
+  },
+  {
+    path: 'catalogo/:categoryId',
+    component: CatalogoComponent
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+Observa que ambas rutas apuntan al mismo componente, eso está bien. La diferencia estará en que la segunda ruta posee `:categoryId` y podrás capturar el parámetro utilizando ese mismo nombre.
+
+
+#### 2. **Inyección de servicios necesarios**
+En el componente correspondiente, inyecta el servicio **ActivatedRoute** y también importa **Params** para tipar tus datos y manipularlos más fácilmente. Ambos imports provenientes de `@angular/router`.
+
+```js
+// modules/website/components/catalogo/catalogo.components.ts
+import { ActivatedRoute, Params, Router } from '@angular/router';
+
+@Component({
+  selector: 'app-catalogo',
+  templateUrl: './catalogo.component.html',
+  styleUrls: ['./catalogo.component.scss']
+})
+export class CatalogoComponent {
+  constructor(private route: ActivatedRoute) { }
+}
+```
+
+#### 3. **Capturando parámetros**
+Es momento de capturar los parámetros en el `ngOnInit()`. Para esto, basta con una línea de código como la siguiente:
+
+```js
+// modules/website/components/catalogo/catalogo.components.ts
+ngOnInit(): void {
+  const categoryId = this.route.snapshot.paramMap.get('categoryId');
+  console.log(categoryId);
+}
+```
+Guardarás en la constante `categoryId` el valor del parámetro que lleva el mismo nombre que definiste en el archivo `app-routing.module.ts`. Luego podrás utilizarlos para realizar peticiones a un servidor o para lo que necesites.
+
+### **Captura de parámetros asíncronos**
+
+Una URL puede cambiar y a veces es conveniente estar escuchando de forma activa los cambios en la misma.
+Para que los Observables nos ayuden a estar atentos a estos cambios, Angular también nos permite suscribirnos a los cambios en los parámetros de URL de la siguiente manera.
+
+```js
+// modules/website/components/catalogo/catalogo.components.ts
+ngOnInit(): void {
+  this.route.paramMap
+    .subscribe((params: Params) => {
+      const categoryId = params.get('categoryId');
+      console.log(categoryId);
+    });
+}
+```
+
+A través del nombre del parámetro definido en el archivo `app-routing.module.ts`, capturas los datos para manipularlos posteriormente.
+
+De esta manera, puedes pasar parámetros dinámicamente, de forma síncrona o asíncrona, dependiendo tu necesidad y construir tu aplicación.
