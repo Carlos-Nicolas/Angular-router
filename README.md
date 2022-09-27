@@ -256,3 +256,55 @@ readAndUpdate(): void {
 
 Importando `switchMap` desde `rxjs/operators`, lo que hace esta función es recibir el dato que emite un observable, y utilizarlo inmediatamente como input para el segundo. De esta manera, el código queda más limpio y profesional.
 
+# **RouterLink y RouterActive**
+
+Toda aplicación requiere de una barra de navegación, de un menú o enlaces para redireccionar a través de sus rutas.
+
+ ##  Redirección de ruta en Angular
+ No es buena práctica realizar una redirección a otra ruta utilizando un simple `href`, ya que el mismo genera que se recargue toda la página y vuelva a renderizarse los componentes.
+
+Angular posee una alternativa para evitar el redireccionamiento utilizando la directiva `routerLink`.
+
+
+Comienza creando enlaces con el elemento `HTML <a>`, pero en lugar de utilizar `href`, utiliza `routerLink`.
+
+```js
+<!-- components/nav-bar/nav-bar.components.html -->
+<div class="header-right hidde-menu">
+    <a routerLink="/home">Home</a>
+    <a routerLink="/catalogo">Catalogo</a>
+    <a routerLink="/about">About</a>
+</div>
+```
+Es así de simple, si las rutas son correctas y están creadas en el archivo `app-routing.module.ts`, Angular renderizará a través del `<router-outlet></router-outlet>` el componente correspondiente a la ruta sin recargar la página.
+
+### **Parámetros dinámicos en las rutas**
+
+También es posible hacer un binding en el `routerLink` para crear rutas con parámetros dinámicos. Para esto, rodea esta directiva de `[]` y pásale como input un array. Angular se encargará de construir las rutas con cada elemento del mismo.
+
+
+```html
+<!-- modules/website/components/nav-bar/nav-bar.components.html -->
+<div class="header-right hidde-menu">
+    <a [routerLink]="['/catalogo', 'electronica']">Electrónica</a>
+    <a [routerLink]="['/catalogo', 12]">Categoría 12</a>
+    <a [routerLink]="['/catalogo', '13ABC']">Categoría 13ABC</a>
+</div>
+```
+
+El ejemplo anterior dará como resultado las rutas `/catalogo/electronica`, `/catalogo/12` y`/catalogo/13ABC`. Cada ruta con su propio parámetro dinámico que podrás capturar posteriormente en el controlador de tu componente.
+
+
+### **Cómo identificar ruta activada**
+
+Para mejorar la experiencia del usuario utilizando la aplicación, es buena práctica resaltar con algún estilo CSS particular la ruta activada en el momento. Angular hace esto por nosotros gracias a la `directiva routerLinkActive`.
+
+```html
+<div class="header-right hidde-menu">
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a routerLink="/catalogo" routerLinkActive="active">Catalogo</a>
+    <a routerLink="/about" routerLinkActive="active">About</a>
+</div>
+```
+
+Cuando Angular identifique que la misma ruta del enlace está activa, le agregará la clase `active`. Ya luego es tarea de darle estilos a esta clase para que luzca diferente con respecto a las rutas desactivadas.
