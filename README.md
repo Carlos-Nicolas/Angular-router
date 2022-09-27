@@ -211,3 +211,48 @@ ngOnInit(): void {
 A través del nombre del parámetro definido en el archivo `app-routing.module.ts`, capturas los datos para manipularlos posteriormente.
 
 De esta manera, puedes pasar parámetros dinámicamente, de forma síncrona o asíncrona, dependiendo tu necesidad y construir tu aplicación.
+
+
+# **Evitando doble subscribe**
+
+Uno de los principales problemas de los observables es el Callback Hell. La anidación de N cantidad de suscripciones, una dentro de la otra, vuelve tu código muy difícil de mantener y de leer.
+
+## Solucionando problemas de Callbacks
+
+Utilizando promesas, puedes resolver esto fácilmente con `async/await`. Pero si hablamos de observables, nuestra mejor amiga, la librería RxJS, llega para aportar su solución.
+
+Un ejemplo común de esta problemática en Angular es como la siguiente:
+
+```js
+readAndUpdate(): void {
+  // Ejemplo de callback hell
+  this.apiService.getProduct(1)
+    .subscribe(res => {
+      this.apiService.updateProduct(1, { name: 'Nuevo nombre del producto' })
+        .subscribe(res2 => {
+          // ...
+        });
+    });
+}
+```
+Donde se está realizando una petición para la lectura de un producto e inmediatamente se está actualizando el mismo. Generando un `subscribe` dentro de otro.
+
+Tal vez, hasta dos `subscribe` es aceptable, pero no se recomienda continuar con esa estructura de código y es posible resolverlo de la siguiente manera.
+
+```js
+import { switchMap } from 'rxjs/operators';
+
+readAndUpdate(): void {
+  // Solución callback hell
+  this.apiService.getProduct(1)
+    .pipe(
+      switchMap(products => this.apiService.updateProduct(1, { name: 'Nuevo nombre' }) )
+    )
+    .subscribe(res => {
+      // Producto actualizado
+    });
+}
+```
+
+Importando `switchMap` desde `rxjs/operators`, lo que hace esta función es recibir el dato que emite un observable, y utilizarlo inmediatamente como input para el segundo. De esta manera, el código queda más limpio y profesional.
+
