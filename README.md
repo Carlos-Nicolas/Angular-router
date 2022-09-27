@@ -308,3 +308,47 @@ Para mejorar la experiencia del usuario utilizando la aplicación, es buena prá
 ```
 
 Cuando Angular identifique que la misma ruta del enlace está activa, le agregará la clase `active`. Ya luego es tarea de darle estilos a esta clase para que luzca diferente con respecto a las rutas desactivadas.
+
+# Ruta 404
+
+Puede ocurrir en tu aplicación que el usuario ingrese a una ruta que no exista. Ya sea por un error de programación o un error manual de que el usuario ingrese una ruta que no esté definida.
+
+## Qué es componente 404
+
+Es una buena práctica manipular las rutas no existentes creando un componente con un mensaje típico de “página no encontrada” o similar.
+
+Para esto, define una ruta con un doble asterisco que le indica a Angular que renderice un componente siempre que la ruta no exista.
+
+
+```js
+// app-routing.module.ts
+import { NotFoundComponent } from './components/not-found/not-found.component';
+
+const routes: Routes = [
+  {
+    path: 'about',
+    component: AboutComponent
+  },
+  {
+    path: 'catalogo',
+    component: CatalogoComponent
+  },
+  {
+    path: 'home',
+    component: HomeComponent
+  },
+  {
+    path: '**',
+    component: NotFoundComponent        // 404
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+Es muy importante que esta regla para manejo de rutas no definidas se encuentre ubicado en el último lugar del array. Angular analiza las rutas en el mismo orden en que las defines. Si esta regla se encuentra en primer lugar, puede anular las demás y darte algunos problemas.
+
+
