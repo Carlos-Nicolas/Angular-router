@@ -352,3 +352,25 @@ export class AppRoutingModule { }
 Es muy importante que esta regla para manejo de rutas no definidas se encuentre ubicado en el último lugar del array. Angular analiza las rutas en el mismo orden en que las defines. Si esta regla se encuentra en primer lugar, puede anular las demás y darte algunos problemas.
 
 
+# Detalle de cada producto
+
+Es momento de hacer un repaso de todo lo aprendido hasta aquí.
+
+- Creación de rutas
+- Creación de rutas con parámetros
+- Redirección a otras rutas con RouterLink
+- Destacar ruta actual con RouterActive
+- Ruta 404
+
+El desafío para ti es avanzar con tu aplicación para fortalecer los conocimientos. Crea una barra de navegación que te permita navegar por tu app. Crea rutas dinámicas que reciban parámetros por URL para capturarlos y hacer solicitudes a una API. Además, customizar una página 404 para las rutas no definidas.
+
+
+# Qué API de prueba usar para practicar
+Si aún no iniciaste tu propio proyecto de prueba o no sabes qué hacer, existen muchas APIs gratuitas que puedes utilizar para practicar y construir aplicaciones. Te comparto las más populares para que las investigues:
+
+- MockAPI
+- OpenWeather
+- Pokémon API
+- The Rick and Morty API
+
+Anímate a explorar estas API y divertirte desarrollando aplicaciones y practicando todo lo que ya sabes sobre Angular hasta aquí.
