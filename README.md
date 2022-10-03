@@ -374,3 +374,87 @@ Si aún no iniciaste tu propio proyecto de prueba o no sabes qué hacer, existen
 - The Rick and Morty API
 
 Anímate a explorar estas API y divertirte desarrollando aplicaciones y practicando todo lo que ya sabes sobre Angular hasta aquí.
+
+
+# Parametros URL
+
+Una característica sobre las URL es la posibilidad de transportar información opcional a través de parámetros de consulta.
+
+ ## **Query Params**
+
+ Los parámetros de ruta, por ejemplo `/catalogo/:categoryId`, son obligatorios. Sin el ID la ruta no funcionaría. Por otro lado, existen los parámetros de consulta que los reconocerás seguidos de un `?` y separados por un `&`, por ejemplo `/catalogo?limit=10&offset=0`.
+
+#### 1. Creando rutas con parámetros
+Para crear rutas con este tipo de parámetros, utiliza la directiva queryParams propia de Angular de la siguiente manera.
+
+```html
+<div class="header-right hidde-menu">
+    <a routerLink="/catalogo" [queryParams]="{ category: 'electronica' }" routerLinkActive="active">Electrónica</a>
+</div>
+```
+
+La directiva queryParams recibe un objeto y creará la ruta `/catalogo?category=electronica`.
+
+#### 2. **Capturar parámetros en las rutas**
+Para capturar estos datos en el componente, es aconsejable realizarlo en el hook de ciclo de vida `ngOnInit()`.
+
+```js
+// modules/website/component/catalogo/catalogo.component.ts
+import { ActivatedRoute, Params } from '@angular/router';
+
+@Component({
+  selector: 'app-catalogo',
+  templateUrl: './catalogo.component.html',
+  styleUrls: ['./catalogo.component.scss']
+})
+export class CatalogoComponent implements OnInit {
+
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.route.queryParams
+      .subscribe((params: Params) => {
+        console.log(params.category);
+      });
+  }
+}
+```
+
+Suscribiéndote a **queryParams**, podrás capturar y hacer uso de esta información.
+
+Recuerda que estos parámetros suelen no ser obligatorios, tu aplicación debería seguir funcionando si los mismos no existen.
+
+
+#  Programación Modular
+
+Para activar las técnicas de ***Lazy Loading*** y ***CodeSplitting*** en Angular tienes que construir tus aplicaciones de forma modular.
+
+
+## Cuáles son los módulos en Angular
+
+Por defecto, Angular posee un solo módulo en el archivo `app.module.ts`. Todos tus componentes, servicios, pipe, etc. se importan aquí. Utiliza un decorador llamado `@ngModule()` con un aspecto similar al siguiente:
+
+
+```js 
+// app.module.ts
+@NgModule({
+  imports: [],         // Imports de otros módulos.
+  declarations: [],    // Imports de los componentes del módulo.
+  exports: [],         // Exports de componentes u otros para ser utilizados en otros módulos.
+  providers: [],       // Inyección de servicios.
+  bootstrap: []        // Import del componente principal de la aplicación.
+})
+export class AppModule { }
+
+```
+Al modularizar una aplicación, cada módulo tendrá sus componentes exclusivos, servicios o los archivos que fuesen a necesitar.
+
+## Tipos de Módulos en Angular
+
+Podemos identificar varios tipos de módulos. El **AppModule** es el módulo raíz que da inicio a tu aplicación. Existen los Routing Modules para la definición de rutas.
+
+
+El Shared Module que posee servicios o componentes compartidos por toda la aplicación. El Feature/Domain Module que son módulos propios de tu aplicación.
+
+De esta manera, Angular construye un ecosistema de módulos, pudiendo dividir una APP en N partes para optimizar el rendimiento y mantener un orden en el código fuente para que sea comprensible y escalable.
+
