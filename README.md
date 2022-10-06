@@ -613,3 +613,4 @@ Te recomiendo lo siguiente: si ya tienes una aplicación, reestructúrala de for
 
 Cada módulo puede tener su propio `<header>`, `<footer>` o su propio layout además de las páginas pertinentes al mismo.
 
+
