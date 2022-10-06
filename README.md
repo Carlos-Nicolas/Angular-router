@@ -601,3 +601,15 @@ export class WebsiteRoutingModule {}
 Presta atención a la propiedad `children` que construye las nuevas reglas para las rutas.
 
 De esta manera, puedes tener un `<router-outlet>` dentro de otro `<router-outlet>` para renderizar páginas hijas de cada módulo y tener un layout personalizado por nada uno de ellos. Además de estar optimizado el rendimiento de tu aplicación gracias al **_Lazy Loading y CodeSplitting_**.
+
+
+# Creando el CMS Module
+
+Es momento de poner manos a la obra con todo lo aprendido hasta aquí. Anímate a crear una aplicación con algunos módulos y páginas hijas para explorar cómo se desarrolla profesionalmente las aplicaciones con Angular.
+
+## Ejercicio para crear un CMS Module
+
+Te recomiendo lo siguiente: si ya tienes una aplicación, reestructúrala de forma modular con todas sus páginas y crea un segundo módulo llamado CMS. Un **CMS (Content Management System)** no es más que un administrador privado para los usuarios de la aplicación para que puedan cargar contenido.
+
+Cada módulo puede tener su propio `<header>`, `<footer>` o su propio layout además de las páginas pertinentes al mismo.
+

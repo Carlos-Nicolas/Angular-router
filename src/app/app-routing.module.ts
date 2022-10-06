@@ -12,17 +12,14 @@ import { ProfileComponent } from './website/pages/profile/profile.component';
 import { ProductDetailComponent } from './website/pages/product-detail/product-detail.component';
 import { LayoutComponent } from './website/components/layout/layout.component';
 
-
-
-
 const routes: Routes = [
   {
-    path:'',
+    path: '',
     component: LayoutComponent,
-    children:[
+    children: [
       {
-        path:'',
-        redirectTo:'/home',
+        path: '',
+        redirectTo: '/home',
         pathMatch: 'full',
       },
       {
@@ -61,13 +58,17 @@ const routes: Routes = [
         path: 'profile',
         component: ProfileComponent,
       },
-    ]
+    ],
+  },
+  {
+    path:'cms',
+    loadChildren: ()=> import('./cms/cms.module').then(m => m.CmsModule)
   },
 
   {
     path: '**',
-    component: NotFoundComponent
-  }
+    component: NotFoundComponent,
+  },
 ];
 
 @NgModule({
