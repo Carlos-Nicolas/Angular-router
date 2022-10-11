@@ -614,3 +614,17 @@ Te recomiendo lo siguiente: si ya tienes una aplicación, reestructúrala de for
 Cada módulo puede tener su propio `<header>`, `<footer>` o su propio layout además de las páginas pertinentes al mismo.
 
 
+# Creando un Shared Module
+
+La documentación oficial de Angular recomienda la creación de un SharedModule. Un módulo compartido donde guardarás los componentes, pipes, directivas o servicios que dos o más de tus otros módulos necesitarán.
+
+# **Cómo crear un módulo compartido**
+
+Al igual que con cualquier módulo, créalo con el comando `ng g m modules/shared` aunque este nuevo módulo no necesitará routing.
+
+Importa en este módulo las piezas de código que serán utilizadas por tus otros módulos como, por ejemplo, un servicio para consumo de APIs o un componente para construir un paginador. Pipes y Directivas customizadas también es buena práctica colocarlas aquí.
+
+Solo recuerda importar este **SharedModule** en el módulo principal de tu aplicación, así como en cada módulo individualmente de tu app.
+
+De esta manera, cumples con las buenas prácticas en el desarrollo de software con Angular y mantienes tu código fuente ordenado. Los futuros desarrolladores que tomen el proyecto lo agradecerán.
+
