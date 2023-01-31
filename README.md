@@ -1002,3 +1002,29 @@ export class AdminGuard implements CanActivate {
 }
 ```
 De esta manera, los Guards se convierten en asíncronos, que suele ser lo más apropiado para validar tokens y permisos de los usuarios para el ingreso o no a una ruta.
+
+
+# Guard para Admin
+
+Es tu turno de continuar explorando los Guards de Angular y sus posibilidades para la segurización de rutas. El reto para ti es crear un Guard que valide el “rol” del usuario logueado y le permita o no entrar a los módulos de administración de tu aplicación.
+
+
+## Proceso para hacer Guard para Admin
+Recuerda importar los Guards en el routing de tu aplicación, ya sea para bloquear el acceso a los módulos o el acceso a un componente individual.
+
+```js
+// app-routing.module.ts
+import { AuthGuard } from './modules/shared/guards/auth.guard';
+import { AdminGuard } from './modules/shared/guards/admin.guard';
+
+const routes: Routes = [
+  {
+    path: 'cms',
+    loadChildren: () => import('./modules/cms/cms.module').then(m => m.CmsModule),
+    canActivate: [ AuthGuard, AdminGuard ]
+  },
+];
+```
+
+También puedes segurizar las reglas de tu routing con más de un Guard a la vez, separando así la lógica de autenticación y autorización de los usuarios.
+
