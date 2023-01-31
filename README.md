@@ -628,3 +628,183 @@ Solo recuerda importar este **SharedModule** en el módulo principal de tu aplic
 
 De esta manera, cumples con las buenas prácticas en el desarrollo de software con Angular y mantienes tu código fuente ordenado. Los futuros desarrolladores que tomen el proyecto lo agradecerán.
 
+# All Modules y Custom Strategy
+
+Al haber activado la técnica de ***Lazy Loading*** , puedes **personalizar el envío de estos módulos** al cliente con diferentes estrategias.
+
+## Cómo hacer precarga de módulos bajo demanda
+
+Por defecto, la aplicación enviará al cliente solo el módulo que necesita. Si ingresas al módulo website, solo se cargará su respectivo archivo JS.
+
+Si el usuario solicita otro módulo, este se cargará solo cuando sea necesario
+
+Esto puede causarte problemas, ya que si el módulo solicitado es algo pesado o la conexión es lenta, tardará varios segundos en estar listo y no será buena la experiencia de usuario.
+
+# Cómo hacer precarga de todos los módulos
+
+Puedes decirle a tu aplicación que, por defecto, precargue todos los módulos con la siguiente configuración.
+
+```js
+// app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '',
+    loadChildren: () => import('./modules/website/website.module').then(m => m.WebsiteModule),
+  },
+  {
+    path: 'cms',
+    loadChildren: () => import('./modules/cms/cms.module').then(m => m.CmsModule),
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, {
+    preloadingStrategy: PreloadAllModules
+  })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+Importando **PreloadAllModules** desde `@angular/router`, lo pasas como parámetro al `import` en el decorador `@NgModule().` De esta manera, se cargarán en el primer render TODOS los módulos que tu aplicación tenga, pudiendo ver por consola algo como lo siguiente.
+
+## Pasos para una estrategia personalizada de precarga
+
+Precargar todos los módulos a la vez, puede ser contraproducente. Imagina que tu aplicación posea 50 o 100 módulos. Sería lo mismo que tener todo en un mismo archivo `main.js`.
+
+Para solucionar esto, puedes personalizar la estrategia de descarga de módulos indicando qué módulos si se deben precargar y cuáles no.
+
+
+#### 1. **Agrega metadata a cada ruta**
+Agrégale a cada regla en el routing de tu aplicación, metadata para indicarle a cada módulo si debe ser precargado, o no.
+
+```js
+// app-routing.module.ts
+const routes: Routes = [
+  {
+    path: '',
+    loadChildren: () => import('./modules/website/website.module').then(m => m.WebsiteModule),
+    data: { preload: true },
+  },
+  {
+    path: 'cms',
+    loadChildren: () => import('./modules/cms/cms.module').then(m => m.CmsModule),
+    data: { preload: true },
+  }
+];
+```
+
+
+Con la propiedad `data: { preload: true }`, le indicas al servicio CustomPreloadingStrategy si el módulo debe ser precargado en el primer render de tu app.
+
+
+#### 2. **Crea un servicio con estrategia personalizada**
+Crea un servicio al cual llamaremos CustomPreloadingStrategy con la siguiente lógica.
+
+
+```js
+// modules/shared/services/custom-preloading-strategy.service.ts
+import { Injectable } from '@angular/core';
+import { Route, PreloadingStrategy } from '@angular/router';
+import { Observable, of } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CustomPreloadingStrategyService implements PreloadingStrategy {
+
+  preload(route: Route, load: () => Observable<any>): Observable<any> {
+    if (route.data && route.data.preload)
+      return load();
+    else
+      return of(null);
+  }
+
+}
+```
+
+El servicio implementa **PreloadingStrategy** y sobreescribiendo el método `preload()`, hace uso de la metadata para desarrollar tu propia lógica de renderizado de módulos.
+
+
+#### 3. **Importa tu estrategia**
+Finalmente, importa tu estrategia personalizada en el routing.
+
+
+```js
+// app-routing.module.ts
+import { CustomPreloadingStrategyService } from './modules/shared/services/custom-preloading-strategy.service';
+
+// ..
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, {
+    preloadingStrategy: CustomPreloadingStrategyService,
+  })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+De esta manera, ya puedes personalizar qué módulos serán enviados al cliente y cuáles no, mejorando así el rendimiento de tu aplicación.
+# QuickLink Strategy
+
+Puedes optar entre precargar todos los módulos con ***Lazy Loading***, o **seleccionar los que a ti te parecen los más importantes** que el usuario necesitará. ***Justamente ese es un inconveniente con esta técnica, no tiene en cuenta al usuario.***
+
+Veamos otra forma de precargar módulos teniendo en cuenta al mismo.
+
+## Cómo hacer precarga de módulos en pantalla
+
+La estrategia de pregarga de módulos **QuickLink** utiliza la API nativa del navegador Intersection Observer API para observar el viewport de la pantalla y solo precargar los módulos cuyos enlaces hacia ellos estén visibles.
+
+En otras palabras, si en pantalla hay un enlace visible que redirecciona a un módulo en particular, este será precargado.
+
+Puede ocurrir que un usuario administrador, tenga a disposición todos los módulos de la aplicación. Pero que un usuario con menor privilegio solo podrá acceder a unos pocos módulos y no tiene sentido que precargue todos.
+
+
+### 1. Instalando la dependencia
+Para activar esta estrategia, instala la dependencia **ngx-quicklink** con `npm i ngx-quicklink --save`.
+
+### 2. Importando el módulo
+Importa el módulo QuicklinkModule, en el módulo principal de tu aplicación.
+
+```js
+// app.module.ts
+import { QuicklinkModule } from 'ngx-quicklink'
+
+@NgModule({
+  imports: [
+    // ..
+    QuicklinkModule
+  ],
+})
+export class AppModule { }
+```
+### 3. Importando la estrategia
+Importa la estrategia en el routing de la aplicación.
+
+```js
+// app-routing.module.ts
+import { QuicklinkStrategy } from 'ngx-quicklink'
+
+// ..
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, {
+    preloadingStrategy: QuicklinkStrategy
+  })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
+
+También, muy importante, importa el módulo **QuicklinkModule** en cada uno de los módulos de tu aplicación que quieras que sea precargado.
+
+
+```sh
+TIP: Puedes importar **QuicklinkModule** en el **SharedModule** si deseas no tener que hacerlo módulo por módulo y solo lo haces en el módulo compartido.
+```
+
+Ahora si, podrás observar que solo los módulos visibles en el viewport se precargan, ignorando los que el usuario no necesitará.
