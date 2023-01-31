@@ -871,3 +871,41 @@ const routes: Routes = [
 ```
 Agrégale a las rutas que quieras segurizar `canActivate: [ AdminGuard ]`.
 De esta manera, ya puedes implementar la lógica que necesites para cada Guard. En este caso, permitir el acceso al módulo CMS solo para usuarios administradores.
+
+
+# Implementando redirects
+
+Los Guards se encargan de **permitir el ingreso o no de los usuarios a las rutas**. Cuando un usuario no tiene acceso, es una buena práctica informarle qué está pasando y por qué no está entrando a una ruta.
+
+## Cómo redireccionar desde un Guard
+
+Para mejorar la experiencia de usuario, cuando no se tiene permisos para ingresar a X ruta, es recomendable redireccionar al usuario a la home de la aplicación o a alguna otra página pertinente.
+
+Para esto, inyecta el servicio Router importándolo desde `@angular/router` en el Guard para realizar una redirección.
+
+```js
+// modules/shared/guards/admin.guard.ts
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AdminGuard implements CanActivate {
+
+  constructor(private router: Router) {}
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    // Lógica para determinar si el usuario tiene permisos o no.
+    let allow = true;
+    
+    if (!allow)
+      this.router.navigate(['/home']);
+    return allow;
+  }
+}
+```
+
+Así es como puedes crear la lógica que necesites en tus Guards. Cuando el usuario no tenga permisos de acceso, redireccionarlo a otra página para que no quede en una página en blanco.
