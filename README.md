@@ -1147,3 +1147,53 @@ export class AdminComponent implements OnExit {
 ```
 
 De esta manera, solo necesitará un Guard del tipo **CanDeactivate**, cada componente que lo necesite, implementará la interfaz y aplicará la lógica necesaria para su funcionamiento.
+
+
+# Netlify Deployment
+
+Es momento de **desplegar tu aplicación en un entorno productivo** para tener acceso al mismo desde cualquier parte del mundo. Es importante, como desarrollador o desarrolladora de software, que conozcas herramientas que te permitan desplegar aplicaciones rápidamente y mostrar tu trabajo al mundo.
+
+
+Veamos como hacerlo con **Netlify**.
+
+# Desplegar una aplicación con Netlify
+Netlify es un importante proveedor de hosting cloud que puedes utilizar de forma gratuita para jugar y hacer pruebas desplegando aplicaciones fácilmente.
+
+## 1. Creación de cuenta
+Si aún no la tienes, crea una cuenta en Netlify. Te recomiendo hacerlo utilizando tu cuenta de GitHub (o GitLab/Bitbucket) para tener acceso rápido al repositorio de tu proyecto.
+
+## 2. Creación de archivo de configuración
+Crea en la raíz de tu proyecto un archivo llamado `netlify.toml` con el siguiente contenido:
+
+```js
+[build]
+  publish = "dist/angular-modules"
+  command = "npm run build"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  ```
+
+Dicho archivo posee la configuración básica para enlazar el repositorio de tu proyecto con Netlify. Asegúrate de configurar correctamente la ruta en `publish` con el build de tu aplicación dentro de la carpeta `dist`.
+
+## 3. Crear nuevo proyecto en Netlify
+Un vez tengas preparado tu proyecto, ve a Netlify, selecciona crear nuevo proyecto y a continuación selecciona tu proveedor de repositorios.
+
+## 4. Sincronizando con el repositorio
+Busca dentro de tu cuenta el repositorio que quieres desplegar.
+
+## 5. Desplegando tu aplicación
+Selecciona finalmente la rama de tu repositorio que Netlify utilizará y has clic en “Deploy site”.
+
+
+Luego de algunos minutos, tu aplicación quedará desplegada en una URL pública de prueba que Netlify provee.
+
+
+Haciendo clic en “Open published deploy”, podrás ver tu app corriendo en un entorno de producción.
+
+
+# Para que te sirve un sistema de CI/CD
+Un sistema de CI/CD hace referencia a Integración Continua y Entrega Continua, por sus siglas en español. Un concepto muy importante que tienes que al menos conocer del mundo DevOps.
+
+En pocas palabras, es una técnica para automatizar los despliegues cada vez que se hace commit en X rama. En este caso, el sistema de CI/CD está conectado con la rama “Master”. Cada vez que hagas un push de un commit a dicha rama, Netlify actualizará tu proyecto sin que tengas que hacer nada.
